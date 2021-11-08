@@ -1,0 +1,227 @@
+﻿
+@{
+    ViewData["Title"] = "DetalleIndicador";
+}
+
+<style>
+    div {
+        min-height: 40px;
+        box-sizing: border-box;
+    }
+
+    #wide-div {
+        width: 100vw;
+        margin-left: calc(-50vw + 50%);
+        border: 2px solid green;
+    }
+  
+    table thead tr th {
+        font-size: 7px;
+        
+    }
+
+    table tbody tr td {
+        font-size: 7px;
+    }    
+</style>
+
+<script type="text/javascript">
+
+    var perspectiva = '@ViewBag.perspectiva';
+
+    function load() {
+        fnArmarTabla();
+    };
+
+    window.onload = load;
+
+
+    function fnArmarTabla() {
+
+        console.log("hola");
+
+        var perspecTitle = "";
+        var descripciones = "";
+        var valores = "";
+
+        var cuerpoDescripciones = "";
+
+        var datoArray = [];
+
+
+        function DatoObject(codigo, objetivo, indicador, bmedicion) {
+                this.codigo = codigo;
+                this.objetivo = objetivo;
+                this.indicador = indicador;
+                this.bmedicion = bmedicion;
+        };
+
+        for (i = 1; i <= 20; i++) {
+
+            datoArray.push(new DatoObject("Codigo " + i, "Objetivo " + i,"Indicador "+ i, "Base de Medicion " + i));
+        }
+
+
+        //console.log(datoArray);      
+
+            perspecTitle = perspecTitle + '<thead>';
+            perspecTitle = perspecTitle + '<tr class="success">';
+            perspecTitle = perspecTitle + '<th>PERSPECTIVA ' + perspectiva + '</th>';
+            perspecTitle = perspecTitle + '</tr></thead>';
+
+            descripciones = descripciones + '<thead>';
+            descripciones = descripciones + '<tr class="info">';
+            descripciones = descripciones + '<th class="warning">Codigo</th>';
+            descripciones = descripciones + '<th class="active">Objetivo</th>';
+            descripciones = descripciones + '<th class="warning">Indicador</th>';
+            descripciones = descripciones + '<th class="active">Base de Medicion</th>';
+            descripciones = descripciones + '</tr></thead>';
+
+            valores = valores + '<thead>';
+            valores = valores + '<tr>';
+            valores = valores + '<th>Año</th>';
+            valores = valores + '<th>V.O</th>';
+            valores = valores + '<th>Ene</th>';
+            valores = valores + '<th>Feb</th>';
+            valores = valores + '<th>Mar</th>';
+            valores = valores + '<th>Abr</th>';
+            valores = valores + '<th>May</th>';
+            valores = valores + '<th>Jun</th>';
+            valores = valores + '<th>Jul</th>';
+            valores = valores + '<th>Agos</th>';
+            valores = valores + '<th>Set</th>';
+            valores = valores + '<th>Oct</th>';
+            valores = valores + '<th>Nov</th>';
+            valores = valores + '<th>Dic</th>';
+            valores = valores + '<th>Total</th>';
+            valores = valores + '<th>Promedio</th>';
+            valores = valores + '</tr></thead>';
+
+        //_-----------------------------------------------------------------
+        descripciones = descripciones + '<tbody>';
+        //--------------------------------------------------------------------------------------- TABLA
+        datoArray.forEach(function (item, index) {
+
+            console.log("En el índice " + index + " hay este valor: " + item.codigo + " y este nombre: " + item.objetivo);
+
+                descripciones = descripciones + '<tr>';
+
+                descripciones = descripciones + '<td> <small style="color: blue">' + item.codigo + '</small></td>';
+                descripciones = descripciones + '<td> <small style="color: blue">' + item.objetivo + '</small> </td>';
+                descripciones = descripciones + '<td> <small style="color: blue">' + item.indicador + '</small> </td>';
+                descripciones = descripciones + '<td> <small style="color: blue">' + item.bmedicion + '</small> </td>';                
+
+                descripciones = descripciones + '</tr>';
+            });
+
+
+        descripciones = descripciones + '</tbody>';
+
+
+        //-------------------------------------Cabeceras
+        $('#pnlPerspectiva').append('<table class="table table-bordered" style="font-size:12.5px;" id="cbPerspectiva" >' + perspecTitle + '</table>').fadeIn(300000);
+        $('#pnlDescripciones').append('<table class="table table-bordered" style="font-size:12.5px;" id="cbDescripciones" >' + descripciones + '</table>').fadeIn(300000);
+        $('#pnlValores').append('<table class="table table-bordered" style="font-size:12.5px;" id="cbValores" >' + valores + '</table>').fadeIn(300000);
+        //-------------------------------------Cabeceras
+
+
+        $('#pnlCalidadConteos').append('<table class="table table-hover m-b-0" style="font-size:11.1px;" id="tbCalidadConteos" >' + cuerpo + '</table>').fadeIn(300000);//.innerHTML();
+    }
+
+</script>
+
+
+
+
+<br />
+
+<div class="row">
+
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+
+        <div class="form-element-list">
+            <div class="curved-inner-pro">
+                <div class="curved-ctn">
+                    <h2>Dashboard / Balanced Scorecard / Detalle Indicador</h2>
+                </div>
+            </div>
+
+            <div class="row">
+
+                <div class="col-lg-2 col-md-3 col-sm-3 col-xs-12">
+                    <div class="nk-int-mk sl-dp-mn">
+                        <h2>Servicio</h2>
+                    </div>
+                    <div class="bootstrap-select fm-cmp-mg">
+                        <div class="btn-group bootstrap-select">
+                            <div class="dropdown-menu open" role="combobox" style="max-height: 357.6px; overflow: hidden; min-height: 132px;"><ul class="dropdown-menu inner" role="listbox" aria-expanded="false" style="max-height: 347.6px; overflow-y: auto; min-height: 122px;"><li data-original-index="0" class=""><a tabindex="0" class="" style="" data-tokens="null" role="option" aria-disabled="false" aria-selected="false"><span class="text">Drama</span><span class="notika-icon notika-checked check-mark"></span></a></li><li data-original-index="1" class=""><a tabindex="0" class="" style="" data-tokens="null" role="option" aria-disabled="false" aria-selected="false"><span class="text">Cariska</span><span class="notika-icon notika-checked check-mark"></span></a></li><li data-original-index="2" class="selected"><a tabindex="0" class="" style="" data-tokens="null" role="option" aria-disabled="false" aria-selected="true"><span class="text">Cheriska</span><span class="notika-icon notika-checked check-mark"></span></a></li><li data-original-index="3" class=""><a tabindex="0" class="" style="" data-tokens="null" role="option" aria-disabled="false" aria-selected="false"><span class="text">Malias</span><span class="notika-icon notika-checked check-mark"></span></a></li><li data-original-index="4"><a tabindex="0" class="" style="" data-tokens="null" role="option" aria-disabled="false" aria-selected="false"><span class="text">Kamines</span><span class="notika-icon notika-checked check-mark"></span></a></li><li data-original-index="5"><a tabindex="0" class="" style="" data-tokens="null" role="option" aria-disabled="false" aria-selected="false"><span class="text">Austranas</span><span class="notika-icon notika-checked check-mark"></span></a></li></ul></div>
+                            <select class="selectpicker" tabindex="-98">
+                                <option value="" selected>Seleccione</option>
+                                <option value="CENGES">CENGES</option>
+                                <option value="CRP LATAM">CRP LATAM</option>
+                                <option value="FIRCOSOFT">FIRCOSOFT</option>
+                                <option value="GPS">GPS</option>
+                                <option value="SAE N1">SAE N1</option>
+                                <option value="SAE N2">SAE N2</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                    <div class="nk-int-mk sl-dp-mn">
+                        <h2 style="color:white">_</h2>
+                    </div>
+                    <div class="btn-list">
+                        <button class="btn btn-info notika-btn-info waves-effect">Mostrar</button>
+                        <a asp-action="Main" class="btn btn-primary btn-sm waves-effect">Volver Al Dashboard</a>
+                    </div>
+
+                </div>
+
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<br />
+
+
+
+<div class="row" id="wide-div">
+
+
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="data-table-list">
+            <div class="basic-tb-hd">
+                <h2>Detalle de Indicador</h2>
+                <p>A continuacion se muestran los indicadores de</p>
+            </div>
+
+            <div class="table-responsive" id="pnlPerspectiva">
+            </div>
+
+            <div class="row">
+
+                <div class="col-lg-5 col-md-12 col-sm-12 col-xs-12">
+                    <div class="table-responsive" id="pnlDescripciones">
+                    </div>
+                </div>
+                <div class="col-lg-7 col-md-12 col-sm-12 col-xs-12">
+                    <div class="table-responsive" id="pnlValores">
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+
+
+
+
+
+</div>

@@ -1,0 +1,410 @@
+﻿@model IEnumerable<OpplusBSC.Models.Entities.TB_DATA_PROC_INT>
+
+@{
+    ViewData["Title"] = "VerProcesoInterno";
+}
+
+
+<style>
+    div {
+        min-height: 40px;
+        box-sizing: border-box;
+    }
+
+    #wide-div {
+        width: 100vw;
+        margin-left: calc(-50vw + 50%);
+        border: 2px solid green;
+    }
+
+    table thead tr th {
+        font-size: 5px;
+    }
+
+    table tbody tr td {
+        font-size: 5px;
+    }
+</style>
+
+<script type="text/javascript">
+
+    var vIndicador = '@ViewBag.indicador';
+    var vPenaliza = '@ViewBag.penalizado';
+
+    var vMes = '@ViewBag.MES';
+    var vAnio = '@ViewBag.YEAR';
+
+    function load() {
+
+        console.log(vIndicador);
+        console.log(vPenaliza);
+
+        if (vIndicador == "Cumplimiento ANS por Servicio" && vPenaliza =="SI") {
+          $('#linkVolver').attr('href', "/ProcesosInternos/VerProcesoInternoKPI?indicador="+ vIndicador+"&penaliza=SI&mes=" + vMes + '&anio=' + vAnio);
+      } else {
+
+          $('#linkVolver').attr('href', "/ProcesosInternos/VerProcesoInternoKPI?indicador="+ vIndicador+"&penaliza=NO&mes=" + vMes + '&anio=' + vAnio);
+      }
+
+        fnInicio();
+    };
+
+    window.onload = load;
+
+    function fnInicio() {
+
+        console.log("entro");
+    }
+
+</script>
+
+
+<br />
+
+
+<form asp-action="VerProcesoInterno" method="post">
+
+    <div class="row">
+
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+
+            <div class="form-element-list">
+                <div class="curved-inner-pro">
+                    <div class="curved-ctn">
+                        <h2>Dashboard / Balanced Scorecard / Detalles de Indicador</h2>
+                    </div>
+                </div>
+
+                <div class="row">
+
+                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                        <div class="nk-int-mk sl-dp-mn">
+                            <h2>Servicio</h2>
+                        </div>
+                        <div class="bootstrap-select fm-cmp-mg">
+                            <div class="btn-group bootstrap-select">
+                                <div class="dropdown-menu open" role="combobox" style="max-height: 357.6px; overflow: hidden; min-height: 132px;"><ul class="dropdown-menu inner" role="listbox" aria-expanded="false" style="max-height: 347.6px; overflow-y: auto; min-height: 122px;"><li data-original-index="0" class=""><a tabindex="0" class="" style="" data-tokens="null" role="option" aria-disabled="false" aria-selected="false"><span class="text">Drama</span><span class="notika-icon notika-checked check-mark"></span></a></li><li data-original-index="1" class=""><a tabindex="0" class="" style="" data-tokens="null" role="option" aria-disabled="false" aria-selected="false"><span class="text">Cariska</span><span class="notika-icon notika-checked check-mark"></span></a></li><li data-original-index="2" class="selected"><a tabindex="0" class="" style="" data-tokens="null" role="option" aria-disabled="false" aria-selected="true"><span class="text">Cheriska</span><span class="notika-icon notika-checked check-mark"></span></a></li><li data-original-index="3" class=""><a tabindex="0" class="" style="" data-tokens="null" role="option" aria-disabled="false" aria-selected="false"><span class="text">Malias</span><span class="notika-icon notika-checked check-mark"></span></a></li><li data-original-index="4"><a tabindex="0" class="" style="" data-tokens="null" role="option" aria-disabled="false" aria-selected="false"><span class="text">Kamines</span><span class="notika-icon notika-checked check-mark"></span></a></li><li data-original-index="5"><a tabindex="0" class="" style="" data-tokens="null" role="option" aria-disabled="false" aria-selected="false"><span class="text">Austranas</span><span class="notika-icon notika-checked check-mark"></span></a></li></ul></div>
+                                <select class="selectpicker" tabindex="-98" name="servicio"
+                                        asp-items="@(new SelectList(ViewBag.servicios, "SERVICIO", "SERVICIO"))">
+                                    <option value="" selected>Seleccione</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-1 col-md-1 col-sm-1 col-xs-12" hidden>
+                        <div class="nk-int-mk sl-dp-mn">
+                            <h2>Indicador</h2>
+                        </div>
+                        <div class="nk-int-st">
+                            <input type="text" name="indicador" value="@ViewBag.indicador" class="form-control" >
+                        </div>
+                    </div>
+
+                    <div class="col-lg-1 col-md-1 col-sm-1 col-xs-12">
+                        <div class="nk-int-mk sl-dp-mn">
+                            <h2>Penalizado</h2>
+                        </div>
+                        <div class="nk-int-st">
+                            <input type="text" name="penaliza" value="@ViewBag.penalizado" class="form-control" readonly>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-1 col-md-1 col-sm-1 col-xs-12" hidden>
+                        <div class="nk-int-mk sl-dp-mn">
+                            <h2>Mes</h2>
+                        </div>
+                        <div class="nk-int-st">
+                            <input type="text" name="mes" value="@ViewBag.MES" class="form-control" >
+                        </div>
+                    </div>
+
+                    <div class="col-lg-1 col-md-1 col-sm-1 col-xs-12" hidden>
+                        <div class="nk-int-mk sl-dp-mn">
+                            <h2>Anio</h2>
+                        </div>
+                        <div class="nk-int-st">
+                            <input type="text" name="anio" value="@ViewBag.YEAR" class="form-control" >
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                        <div class="nk-int-mk sl-dp-mn">
+                            <h2 style="color:white">_</h2>
+                        </div>
+                        <div class="btn-list">
+                            <button type="submit" class="btn btn-info notika-btn-info waves-effect">Filtrar</button>
+                            <a asp-action="Index" asp-route-indicador="@ViewBag.indicador"
+                               asp-route-vMes="@ViewBag.MES" asp-route-vAnio="@ViewBag.YEAR"
+                               class="btn btn-success btn-sm waves-effect">Cargar Data</a>
+                            <a id="linkVolver" class="btn btn-primary btn-sm waves-effect">Volver a KPIs</a>
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <br />
+
+    <div class="row" id="wide-div">
+
+        <div class="data-table-area">           
+
+                <div class="row">
+
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <div class="data-table-list">
+                            <div class="basic-tb-hd">
+                                <h2> @ViewBag.indicador - @ViewBag.MES / @ViewBag.YEAR - Tabla de Resultados</h2>
+                                <p>A continuacion de muestran los resultados de la busqueda</p>
+                            </div>
+                            <div class="table-responsive">
+                                <table id="data-table-basic" class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>
+                                                #
+                                            </th>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.SERVICIO)
+                                            </th>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.TIPO)
+                                            </th>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.NOMBRE_INDICADOR)
+                                            </th>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.PENALIZADO)
+                                            </th>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.DEF_FINALIDAD)
+                                            </th>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.FORMA_CALCULO)
+                                            </th>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.OBJETIVO)
+                                            </th>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.PESO_POND_CONTRATO)
+                                            </th>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.MES)
+                                            </th>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.ANIO)
+                                            </th>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.enero)
+                                            </th>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.febrero)
+                                            </th>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.marzo)
+                                            </th>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.abril)
+                                            </th>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.mayo)
+                                            </th>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.junio)
+                                            </th>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.julio)
+                                            </th>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.agosto)
+                                            </th>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.setiembre)
+                                            </th>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.octubre)
+                                            </th>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.noviembre)
+                                            </th>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.diciembre)
+                                            </th>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.NOMBRE_ARCHIVO)
+                                            </th>                                            
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @{ int contador = 1; }
+                                        @foreach (var item in Model)
+                                        {
+                                        <tr>
+                                            <td>@contador</td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.SERVICIO)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.TIPO)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.NOMBRE_INDICADOR)
+                                            </td>
+                                            <td>
+                                                <strong> @Html.DisplayFor(modelItem => item.PENALIZADO)</strong>
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.DEF_FINALIDAD)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.FORMA_CALCULO)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.OBJETIVO)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.PESO_POND_CONTRATO)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.MES)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.ANIO)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.enero)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.febrero)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.marzo)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.abril)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.mayo)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.junio)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.julio)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.agosto)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.setiembre)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.octubre)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.noviembre)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.diciembre)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.NOMBRE_ARCHIVO)
+                                            </td>
+                                        </tr>
+                                         contador = contador + 1;
+                                        }
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th>
+                                                #
+                                            </th>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.SERVICIO)
+                                            </th>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.TIPO)
+                                            </th>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.NOMBRE_INDICADOR)
+                                            </th>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.PENALIZADO)
+                                            </th>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.DEF_FINALIDAD)
+                                            </th>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.FORMA_CALCULO)
+                                            </th>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.OBJETIVO)
+                                            </th>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.PESO_POND_CONTRATO)
+                                            </th>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.MES)
+                                            </th>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.ANIO)
+                                            </th>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.enero)
+                                            </th>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.febrero)
+                                            </th>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.marzo)
+                                            </th>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.abril)
+                                            </th>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.mayo)
+                                            </th>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.junio)
+                                            </th>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.julio)
+                                            </th>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.agosto)
+                                            </th>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.setiembre)
+                                            </th>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.octubre)
+                                            </th>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.noviembre)
+                                            </th>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.diciembre)
+                                            </th>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.NOMBRE_ARCHIVO)
+                                            </th>
+
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>           
+
+        </div>
+
+    </div>
+
+</form>

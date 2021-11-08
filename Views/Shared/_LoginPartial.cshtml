@@ -1,0 +1,36 @@
+﻿@using Microsoft.AspNetCore.Identity
+
+
+@using OpplusBSC.Models.Entities;
+
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+
+
+        @if (SignInManager.IsSignedIn(User))
+        {
+            <div class="dropdown-trig-sgn">
+                <button class="btn triger-swing waves-effect" 
+                        data-toggle="dropdown" aria-expanded="true">@User.Identity.Name</button>
+                <ul class="dropdown-menu triger-fadeIn-dp">
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Logeado como <strong>@User.Identity.Name!</strong> </a>
+                    </li>
+                    <li class="nav-item">
+                        <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                            <button type="submit" class="nav-link btn btn-link text-dark">Cerrar Sesion</button>
+                        </form>
+                    </li>
+                </ul>
+            </div>            
+        }
+        else
+        {
+            <li class="nav-item">
+                <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Register">Register</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Login">Login</a>
+            </li>
+        }

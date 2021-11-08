@@ -1,0 +1,673 @@
+﻿
+@{
+    ViewData["Title"] = "VerProcesoInternoKPI";
+}
+
+<script type="text/javascript">
+
+    var vIndicador = '@ViewBag.indicador';
+    var vPenaliza = '@ViewBag.penaliza'
+
+    var vMes = '@ViewBag.MES';
+    var vAnio = '@ViewBag.YEAR';
+
+    function load() {
+
+        if (vIndicador == "Cumplimiento ANS por Servicio" && vPenaliza =="SI") {
+          $('#linkDetalle').attr('href', "/ProcesosInternos/VerProcesoInterno?indicador="+ vIndicador+"&penaliza=SI&mes=" + vMes + '&anio=' + vAnio);
+      } else {
+
+          $('#linkDetalle').attr('href', "/ProcesosInternos/VerProcesoInterno?indicador="+ vIndicador+"&penaliza=NO&mes=" + vMes + '&anio=' + vAnio);
+      }
+
+        fnArmarKPIs();
+    };
+
+    window.onload = load;
+
+    serviciosArray = [];
+    serviciosUnicosArray = [];
+
+    function fnArmarKPIs() {
+
+        var encabezados = "";
+        var cuerpo = "";
+
+        var url = "/ProcesosInternos/FunListarProcesosInternos";
+        $.get(url, { mes: vMes, anio: vAnio, penaliza: vPenaliza }, function (data) {
+
+
+            //console.log(data);
+
+            data.forEach(function (element) {
+                serviciosArray.push(element.servicio);
+            });
+
+            var uniques = serviciosArray.filter(fnServiciosUnicos);
+            serviciosUnicosArray = uniques; //metemos los nombres de los servicios unicos
+
+
+            encabezados = encabezados + '<tr class="info">';
+
+            encabezados = encabezados + '<th class="active">Servicio</th>';
+            encabezados = encabezados + '<th class="warning">Ene</th>';
+            encabezados = encabezados + '<th class="warning">Feb</th>';
+            encabezados = encabezados + '<th class="warning">Mar</th>';
+            encabezados = encabezados + '<th class="warning">Abr</th>';
+            encabezados = encabezados + '<th class="warning">May</th>';
+            encabezados = encabezados + '<th class="warning">Jun</th>';
+            encabezados = encabezados + '<th class="warning">Jul</th>';
+            encabezados = encabezados + '<th class="warning">Agos</th>';
+            encabezados = encabezados + '<th class="warning" >Set</th>';
+            encabezados = encabezados + '<th class="warning">Oct</th>';
+            encabezados = encabezados + '<th class="warning">Nov</th>';
+            encabezados = encabezados + '<th class="warning">Dic</th>';
+
+            encabezados = encabezados + '</tr>';
+
+            //console.log(serviciosUnicosArray.length); 5
+
+            var arrayEne = [];
+            var arrayFeb = [];
+            var arrayMar = [];
+            var arrayAbr = [];
+            var arrayMay = [];
+            var arrayJun = [];
+            var arrayJul = [];
+            var arrayAgo = [];
+            var arraySet = [];
+            var arrayOct = [];
+            var arrayNov = [];
+            var arrayDic = [];
+
+
+            function ObjetoKpi(servicio, sumapesoxmes, sumapeso) {
+            this.servicio = servicio;
+                this.sumapesoxmes = sumapesoxmes;
+                this.sumapeso = sumapeso;
+            };
+
+            serviciosUnicosArray.forEach(function (item, index) {//iteramos por cada uno de los servicios encontrados
+
+
+                let filtrados = data.filter(function (value) { //filtramos y agrupamos cada uno de los servicios
+                    //console.log(value.servicio)
+                    return value.servicio === item;
+                });
+
+                //console.log(filtrados);
+
+                filtrados.forEach(function (item, index) {
+
+                    //console.log(item.servicio);
+
+                    for (i = 1; i < 13; i++) {
+
+                        if (i == 1) {
+                            arrayEne.push(new ObjetoKpi(item.servicio, item.pesO_POND_CONTRATO * (item.enero * 100), item.pesO_POND_CONTRATO))
+                        }if (i == 2) {
+                            arrayFeb.push(new ObjetoKpi(item.servicio, item.pesO_POND_CONTRATO * (item.febrero * 100), item.pesO_POND_CONTRATO))
+                            //console.log(item.pesO_POND_CONTRATO * (item.febrero * 100) + "--FEBRERO")
+                        } if (i == 3) {
+                            arrayMar.push(new ObjetoKpi(item.servicio, item.pesO_POND_CONTRATO * (item.marzo * 100), item.pesO_POND_CONTRATO))
+                            //console.log(item.pesO_POND_CONTRATO * (item.marzo * 100) + "--marzo")
+                        } if (i == 4) {
+                            arrayAbr.push(new ObjetoKpi(item.servicio, item.pesO_POND_CONTRATO * (item.abril * 100), item.pesO_POND_CONTRATO))
+                            //console.log(item.pesO_POND_CONTRATO * (item.abril * 100) + "--abril")
+                        } if (i == 5) {
+                            arrayMay.push(new ObjetoKpi(item.servicio, item.pesO_POND_CONTRATO * (item.mayo * 100), item.pesO_POND_CONTRATO))
+                            //console.log(item.pesO_POND_CONTRATO * (item.mayo * 100) + "--mayo")
+                        } if (i == 6) {
+                            arrayJun.push(new ObjetoKpi(item.servicio, item.pesO_POND_CONTRATO * (item.junio * 100), item.pesO_POND_CONTRATO))
+                            //console.log(item.pesO_POND_CONTRATO * (item.junio * 100) + "--junio")
+                        } if (i == 7) {
+                            arrayJul.push(new ObjetoKpi(item.servicio, item.pesO_POND_CONTRATO * (item.julio * 100), item.pesO_POND_CONTRATO))
+                            //console.log(item.pesO_POND_CONTRATO * (item.julio * 100) + "--julio")
+                        } if (i == 8) {
+                            arrayAgo.push(new ObjetoKpi(item.servicio, item.pesO_POND_CONTRATO * (item.agosto * 100), item.pesO_POND_CONTRATO))
+                            //console.log(item.pesO_POND_CONTRATO * (item.agosto * 100) + "--agosto")
+                        } if (i == 9) {
+                            arraySet.push(new ObjetoKpi(item.servicio, item.pesO_POND_CONTRATO * (item.setiembre * 100), item.pesO_POND_CONTRATO))
+                            //console.log(item.pesO_POND_CONTRATO * (item.setiembre * 100) + "--setiembre")
+                        } if (i == 10) {
+                            arrayOct.push(new ObjetoKpi(item.servicio, item.pesO_POND_CONTRATO * (item.octubre * 100), item.pesO_POND_CONTRATO))
+                            //console.log(item.pesO_POND_CONTRATO * (item.octubre * 100) + "--octubre")
+                        } if (i == 11) {
+                            arrayNov.push(new ObjetoKpi(item.servicio, item.pesO_POND_CONTRATO * (item.noviembre * 100), item.pesO_POND_CONTRATO))
+                            //console.log(item.pesO_POND_CONTRATO * (item.noviembre * 100) + "--noviembre")
+                        } if (i == 12) {
+                            arrayDic.push(new ObjetoKpi(item.servicio, item.pesO_POND_CONTRATO * (item.diciembre * 100), item.pesO_POND_CONTRATO))
+                            //console.log(item.pesO_POND_CONTRATO * (item.diciembre * 100) + "--diciembre")
+                        }
+                    }
+                });
+                //console.log("En el índice " + index + " hay este valor: " + item);
+
+
+            });
+
+
+            //console.log(arrayEne);
+
+
+            //------------------------------------------ CUERPO DE TABLA
+
+            //-------------------------------------- Objeto KPI que contendra el calculo
+            function ObjetoKpiF(servicio, calculo) {
+            this.servicio = servicio;
+                this.calculo = calculo;
+            };
+
+            //-------------------------------------- suma de pesos x mes y suma de pesos, con GROUP BY SERVICIO de ENERO
+            var h1 = {};
+
+            var ene = arrayEne.reduce(function(r, o) {
+                var key = o.servicio;
+                if (!h1[key]) {
+                    h1[key] = Object.assign({}, o);
+                    r.push(h1[key]);
+                } else {
+                    h1[key].sumapesoxmes += o.sumapesoxmes;
+                    h1[key].sumapeso += o.sumapeso;
+              }
+              return r;
+            }, []);
+
+
+            var arrayEneF = [];
+            ene.forEach(function (item) {
+                arrayEneF.push(new ObjetoKpiF(item.servicio, item.sumapesoxmes / item.sumapeso))
+            });
+
+            //console.log(arrayEneF);
+            //-------------------------------------- suma de pesos x mes y suma de pesos, con GROUP BY SERVICIO de FEBRERO
+            var h2 = {};
+
+            var feb = arrayFeb.reduce(function(r, o) {
+                var key = o.servicio;
+                if (!h2[key]) {
+                    h2[key] = Object.assign({}, o);
+                    r.push(h2[key]);
+                } else {
+                    h2[key].sumapesoxmes += o.sumapesoxmes;
+                    h2[key].sumapeso += o.sumapeso;
+              }
+              return r;
+            }, []);
+
+
+            var arrayFebF = [];
+            feb.forEach(function (item) {
+                arrayFebF.push(new ObjetoKpiF(item.servicio, item.sumapesoxmes / item.sumapeso))
+            });
+
+            //console.log(arrayFebF);
+            //-------------------------------------- suma de pesos x mes y suma de pesos, con GROUP BY SERVICIO de MARZO
+            var h3 = {};
+
+            var mar = arrayMar.reduce(function(r, o) {
+                var key = o.servicio;
+                if (!h3[key]) {
+                    h3[key] = Object.assign({}, o);
+                    r.push(h3[key]);
+                } else {
+                    h3[key].sumapesoxmes += o.sumapesoxmes;
+                    h3[key].sumapeso += o.sumapeso;
+              }
+              return r;
+            }, []);
+
+
+            var arrayMarF = [];
+            mar.forEach(function (item) {
+                arrayMarF.push(new ObjetoKpiF(item.servicio, item.sumapesoxmes / item.sumapeso))
+            });
+
+            //console.log(arrayMarF);
+            //-------------------------------------- suma de pesos x mes y suma de pesos, con GROUP BY SERVICIO DE ABRIL
+
+            var h4 = {};
+
+            var abr = arrayAbr.reduce(function(r, o) {
+                var key = o.servicio;
+                if (!h4[key]) {
+                    h4[key] = Object.assign({}, o);
+                    r.push(h4[key]);
+                } else {
+                    h4[key].sumapesoxmes += o.sumapesoxmes;
+                    h4[key].sumapeso += o.sumapeso;
+              }
+              return r;
+            }, []);
+
+
+            var arrayAbrF = [];
+            abr.forEach(function (item) {
+                arrayAbrF.push(new ObjetoKpiF(item.servicio, item.sumapesoxmes / item.sumapeso))
+            });
+
+            //console.log(arrayAbrF);
+
+            //-------------------------------------- suma de pesos x mes y suma de pesos, con GROUP BY SERVICIO DE MAYO
+            var h5 = {};
+
+            var may = arrayMay.reduce(function(r, o) {
+                var key = o.servicio;
+                if (!h5[key]) {
+                    h5[key] = Object.assign({}, o);
+                    r.push(h5[key]);
+                } else {
+                    h5[key].sumapesoxmes += o.sumapesoxmes;
+                    h5[key].sumapeso += o.sumapeso;
+              }
+              return r;
+            }, []);
+
+
+            var arrayMayF = [];
+            may.forEach(function (item) {
+                arrayMayF.push(new ObjetoKpiF(item.servicio, item.sumapesoxmes / item.sumapeso))
+            });
+
+            //console.log(arrayMayF);
+            //-------------------------------------- suma de pesos x mes y suma de pesos, con GROUP BY SERVICIO DE JUNIO
+            var h6 = {};
+
+            var jun = arrayJun.reduce(function(r, o) {
+                var key = o.servicio;
+                if (!h6[key]) {
+                    h6[key] = Object.assign({}, o);
+                    r.push(h6[key]);
+                } else {
+                    h6[key].sumapesoxmes += o.sumapesoxmes;
+                    h6[key].sumapeso += o.sumapeso;
+              }
+              return r;
+            }, []);
+
+
+            var arrayJunF = [];
+            jun.forEach(function (item) {
+                arrayJunF.push(new ObjetoKpiF(item.servicio, item.sumapesoxmes / item.sumapeso))
+            });
+
+            //console.log(arrayJunF);
+
+            //-------------------------------------- suma de pesos x mes y suma de pesos, con GROUP BY SERVICIO DE JULIO
+            var h7 = {};
+
+            var jul = arrayJul.reduce(function(r, o) {
+                var key = o.servicio;
+                if (!h7[key]) {
+                    h7[key] = Object.assign({}, o);
+                    r.push(h7[key]);
+                } else {
+                    h7[key].sumapesoxmes += o.sumapesoxmes;
+                    h7[key].sumapeso += o.sumapeso;
+              }
+              return r;
+            }, []);
+
+
+            var arrayJulF = [];
+            jul.forEach(function (item) {
+                arrayJulF.push(new ObjetoKpiF(item.servicio, item.sumapesoxmes / item.sumapeso))
+            });
+
+            //console.log(arrayJulF);
+
+            //-------------------------------------- suma de pesos x mes y suma de pesos, con GROUP BY SERVICIO DE AGOSTO
+            var h8 = {};
+
+            var ago = arrayAgo.reduce(function(r, o) {
+                var key = o.servicio;
+                if (!h8[key]) {
+                    h8[key] = Object.assign({}, o);
+                    r.push(h8[key]);
+                } else {
+                    h8[key].sumapesoxmes += o.sumapesoxmes;
+                    h8[key].sumapeso += o.sumapeso;
+              }
+              return r;
+            }, []);
+
+
+            var arrayAgoF = [];
+            ago.forEach(function (item) {
+                arrayAgoF.push(new ObjetoKpiF(item.servicio, item.sumapesoxmes / item.sumapeso))
+            });
+
+            //console.log(arrayAgoF);
+
+            //-------------------------------------- suma de pesos x mes y suma de pesos, con GROUP BY SERVICIO DE SET
+            var h9 = {};
+
+            var set = arraySet.reduce(function(r, o) {
+                var key = o.servicio;
+                if (!h9[key]) {
+                    h9[key] = Object.assign({}, o);
+                    r.push(h9[key]);
+                } else {
+                    h9[key].sumapesoxmes += o.sumapesoxmes;
+                    h9[key].sumapeso += o.sumapeso;
+              }
+              return r;
+            }, []);
+
+
+            var arraySetF = [];
+            set.forEach(function (item) {
+                arraySetF.push(new ObjetoKpiF(item.servicio, item.sumapesoxmes / item.sumapeso))
+            });
+
+            //console.log(arraySetF);
+
+            //-------------------------------------- suma de pesos x mes y suma de pesos, con GROUP BY SERVICIO DE OCTUBRE
+            var h10 = {};
+
+            var oct = arrayOct.reduce(function(r, o) {
+                var key = o.servicio;
+                if (!h10[key]) {
+                    h10[key] = Object.assign({}, o);
+                    r.push(h10[key]);
+                } else {
+                    h10[key].sumapesoxmes += o.sumapesoxmes;
+                    h10[key].sumapeso += o.sumapeso;
+              }
+              return r;
+            }, []);
+
+
+            var arrayOctF = [];
+            oct.forEach(function (item) {
+                arrayOctF.push(new ObjetoKpiF(item.servicio, item.sumapesoxmes / item.sumapeso))
+            });
+
+            //console.log(arrayOctF);
+
+            //-------------------------------------- suma de pesos x mes y suma de pesos, con GROUP BY SERVICIO DE NOVIEMBRE
+            var h11 = {};
+
+            var nov = arrayNov.reduce(function(r, o) {
+                var key = o.servicio;
+                if (!h11[key]) {
+                    h11[key] = Object.assign({}, o);
+                    r.push(h11[key]);
+                } else {
+                    h11[key].sumapesoxmes += o.sumapesoxmes;
+                    h11[key].sumapeso += o.sumapeso;
+              }
+              return r;
+            }, []);
+
+
+            var arrayNovF = [];
+            nov.forEach(function (item) {
+                arrayNovF.push(new ObjetoKpiF(item.servicio, item.sumapesoxmes / item.sumapeso))
+            });
+
+            //console.log(arrayNovF);
+
+            //-------------------------------------- suma de pesos x mes y suma de pesos, con GROUP BY SERVICIO  DE DICIEMBRE
+            var h12 = {};
+
+            var dic = arrayDic.reduce(function(r, o) {
+                var key = o.servicio;
+                if (!h12[key]) {
+                    h12[key] = Object.assign({}, o);
+                    r.push(h12[key]);
+                } else {
+                    h12[key].sumapesoxmes += o.sumapesoxmes;
+                    h12[key].sumapeso += o.sumapeso;
+              }
+              return r;
+            }, []);
+
+
+            var arrayDicF = [];
+            dic.forEach(function (item) {
+                arrayDicF.push(new ObjetoKpiF(item.servicio, item.sumapesoxmes / item.sumapeso))
+            });
+
+            //console.log(arrayDicF);
+            //--------------------------------------------------------------------------------------------FIN
+
+            var arrayAll = [];
+
+            arrayAll.push(arrayEneF, arrayFebF, arrayMarF, arrayAbrF, arrayMayF,
+                            arrayJunF, arrayJulF, arrayAgoF, arraySetF,
+                            arrayOctF, arrayNovF, arrayDicF);
+
+            //console.log(arrayAll);
+
+            var vLongEverySingleArray = arrayEneF.length; // para obtener la longitud de cada uno de los arrays servicios
+
+            //console.log(vLongEverySingleArray);
+            //----------------For para cada uno de los 5 elementos que tiene cada uno de los 12 sub Array
+            for (i = 0; i <= vLongEverySingleArray - 1; i++) {
+
+                cuerpo = cuerpo + '<tr id="'+arrayAll[0][i].servicio+'">'
+                //titulo de los servicios
+                cuerpo = cuerpo + '<td><medium style="color: blue">' + arrayAll[0][i].servicio + '</medium></td>';
+
+                //----------------------------For para los 12 arrays
+                for (j = 0; j <= arrayAll.length - 1; j++) {
+
+                    //valores de enero a diciembre
+
+                    if (arrayAll[j][i].calculo < 100) {
+
+                        cuerpo = cuerpo + '<td><medium style="color: red">' + arrayAll[j][i].calculo + '</medium></td>';
+                    } else {
+
+                        cuerpo = cuerpo + '<td><medium style="color: green">' + arrayAll[j][i].calculo + '</medium></td>';
+                    }
+
+
+                }
+                 cuerpo = cuerpo + '</tr>';
+            }
+
+            $('#tbBodyKpis').append(cuerpo).fadeIn(300000);
+            $('#tbHeadKpis').append(encabezados).fadeIn(300000);
+
+        });
+
+    }
+
+    function fnServiciosUnicos(value, index, self) {
+          return self.indexOf(value) === index;
+    }
+
+
+
+
+    //var arrSelectedServicios = [];
+    //function checkServices() {
+    //    var ArrayServicios = $('#selectServicios').val();
+    //    arrSelectedServicios = ArrayServicios;
+    //}
+    function fnGraficar() {
+
+        //console.log(arrSelectedServicios);
+
+        var servicioArray = new Array();
+
+        //Grafico 
+        var chart = new CanvasJS.Chart("chartContainer", {
+	        animationEnabled: true,
+            theme: "light2",
+            legend: {
+                cursor: "pointer",
+                itemclick: toggleDataSeries,
+                fontSize: 16,
+            },
+	        data: []
+        });
+        chart.render();
+
+
+        function toggleDataSeries(e) {
+            if (typeof (e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
+                e.dataSeries.visible = false;
+            } else {
+                e.dataSeries.visible = true;
+            }
+            e.chart.render();
+        }
+        //Grafico
+        
+
+        var tableTrs = document.getElementsByTagName("tr");
+
+            for(var i=1;i<tableTrs.length;i++)
+            {
+                var type = "line";
+                var fillOpacity = .4;              
+                var name;                
+
+                servicioArray[i] = new Array();
+
+                console.log(tableTrs[i].id);
+
+                //if (arrSelectedServicios.includes(tableTrs[i].id) === true) {
+                    //console.log("si esta:" + tableTrs[i].id);                  
+                    $("#" + tableTrs[i].id).find('td').each(function (index, td) {                        
+                        //console.log(td.innerText)
+                        servicioArray[i].push({ y: td.innerText, label: tableTrs[i].id });                          
+                        
+                    });                    
+                //}
+                //else {
+                    //console.log("no hay: " + tableTrs[i].id);
+                //}
+
+                //console.log(servicioArray[i]);
+                //chart.options.data.push({ type: type, name: tableTrs[i].id, showInLegend: true, fillOpacity: fillOpacity, dataPoints: servicioArray[i] }); /// AÑADE LOS PIEZOMETROS QUE DESEAMOS GRAFICAR
+                //chart.render();
+            }
+
+
+        var type = "line";
+        var fillOpacity = .4;
+        var dataPoints = [];
+        var dataPoints2 = [];
+        for (var i = 0; i < 20; i++) {
+            dataPoints.push({ y: Math.random() * 10 - 5 });
+            dataPoints2.push({ y: Math.random() * 8 - 3 });
+        }
+        chart.options.data.push({ type: type, fillOpacity: fillOpacity, dataPoints: dataPoints });
+        chart.options.data.push({ type: type, fillOpacity: fillOpacity, dataPoints: dataPoints2 });
+        chart.render();    
+            
+    }
+
+
+</script>
+
+<br />
+
+
+<div class="row">
+
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+
+        <div class="form-element-list">
+            <div class="curved-inner-pro">
+                <div class="curved-ctn">
+                    <h2>Dashboard / @ViewBag.indicador </h2>
+                </div>
+            </div>
+
+            <div class="row">
+
+
+                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                    <div class="nk-int-mk sl-dp-mn">
+                        <h2 style="color:white">_</h2>
+                    </div>
+                    <div class="btn-list">
+                        <a id="linkDetalle"
+                           class="btn btn-info notika-btn-info waves-effect">Ver Detalle</a>
+                        <a asp-controller="Dashboard" asp-action="Main" class="btn btn-primary btn-sm waves-effect">Volver al Dashboard</a>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<br />
+
+<div class="row">
+
+    <div class="data-table-area">
+
+        <div class="row">
+
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="data-table-list">
+                    <div class="basic-tb-hd">
+                        <h2>Tabla de KPIs por Servicio</h2>
+                        <p>A continuacion se muestra el porcentaje de los resultados por servicio.</p>
+
+                        @*<div class="nk-int-mk sl-dp-mn mg-t-30">
+                            <h2>Seleccione los Servicios a Graficar</h2>
+                        </div>*@
+
+                        @*<div class="bootstrap-select">
+                            <div class="btn-group bootstrap-select show-tick">
+                                <select id="selectServicios" onchange="checkServices()" asp-items="@(new SelectList(ViewBag.servicios, "Servicio", "Servicio"))" class="selectpicker" multiple="">
+                                </select>
+                            </div>
+                        </div>*@
+
+                        <a class="btn btn-danger notika-btn-danger waves-effect"
+                           style="float: right;"
+                           onclick="fnGraficar();">Graficar</a>
+
+
+                    </div>
+
+                    <div class="table-responsive">
+                        <table id="data-table-basic" class="table table-striped">
+
+                            <thead id="tbHeadKpis">
+
+                            </thead>
+
+                            <tbody id="tbBodyKpis">
+                            </tbody>
+
+                            <tfoot>
+
+
+                            </tfoot>
+
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+
+
+
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="line-chart-wp chart-display-nn">
+                    <div height="518" width="518" id="chartContainer"
+                         style="display: block; height: 322px; width: 100%;">
+                    </div>
+                </div>
+            </div>
+
+
+
+        </div>
+
+       
+
+    </div>
+
+</div>

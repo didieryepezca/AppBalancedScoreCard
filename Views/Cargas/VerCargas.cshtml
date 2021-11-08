@@ -1,0 +1,177 @@
+﻿@model IEnumerable<OpplusBSC.Models.Entities.TB_HISTORIAL_CARGAS>
+
+@{
+    ViewData["Title"] = "VerCargas";
+}
+
+<br />
+
+<form asp-action="VerCargas" method="post">
+
+    <div class="row">
+
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+
+            <div class="form-element-list">
+                <div class="curved-inner-pro">
+                    <div class="curved-ctn">
+                        <h2>Data / Archivos / </h2>
+                    </div>
+                </div>
+
+                <div class="row">
+
+                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                        <div class="nk-int-mk sl-dp-mn">
+                            <h2>Fecha de Carga</h2>
+                        </div>
+                        <div class="form-group ic-cmp-int">
+                            <div class="form-ic-cmp">
+                                <i class="notika-icon notika-calendar"></i>
+                            </div>
+                            @{
+                                string fecha_ingreso = ViewBag.fecha_hoy;
+
+                                if (fecha_ingreso.Equals("0001-01-01"))
+                                {
+                                    fecha_ingreso = DateTime.Today.ToString("yyyy-MM-dd");
+                                }
+                            }
+
+                            <div class="nk-int-st">
+                                <input name="fecCarga" value="@fecha_ingreso"
+                                       type="text" class="form-control" data-mask="9999/99/99" placeholder="yyyy/mm/dd">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4 col-md-1 col-sm-1 col-xs-12">
+                        <div class="nk-int-mk sl-dp-mn">
+                            <h2>Nombre de Archivo</h2>
+                        </div>
+                        <div class="nk-int-st">
+                            <input type="text" name="nombre" class="form-control">
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                        <div class="nk-int-mk sl-dp-mn">
+                            <h2 style="color:white">_</h2>
+                        </div>
+                        <div class="btn-list">
+                            <button type="submit" class="btn btn-info notika-btn-info waves-effect">Filtrar</button>
+                            <a asp-controller="Dashboard" asp-action="Main" class="btn btn-primary btn-sm waves-effect">Ir al Dashboard</a>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <br />
+
+    <div class="row">
+
+        <div class="data-table-area">
+
+            <div class="row">
+
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="data-table-list">
+                        <div class="basic-tb-hd">
+                            <h2> Archivos Cargados - Tabla de Resultados</h2>
+                            <p>A continuacion de muestran los resultados</p>
+                        </div>
+                        <div class="table-responsive">
+                            <table id="data-table-basic" class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            #
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.indicador)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.estado)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.archivo)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.usuario)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.fecha)
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @{ int contador = 1; }
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td>@contador</td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.indicador)
+                                            </td>
+                                            @if (item.estado == "CARGADO")
+                                            {
+                                                <td>
+                                                    <button class="btn btn-success notika-btn-success waves-effect" disabled="disabled">@Html.DisplayFor(modelItem => item.estado)</button>
+                                                </td>
+                                            }
+                                            else
+                                            {
+                                                <td>
+                                                    <button class="btn btn-danger notika-btn-danger waves-effect" disabled="disabled">@Html.DisplayFor(modelItem => item.estado)</button>
+                                                </td>
+                                            }
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.archivo)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.usuario)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.fecha)
+                                            </td>
+                                        </tr>
+                                        contador = contador + 1;
+                                    }
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <th>
+                                            #
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.indicador)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.estado)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.archivo)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.usuario)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.fecha)
+                                        </th>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    </form>

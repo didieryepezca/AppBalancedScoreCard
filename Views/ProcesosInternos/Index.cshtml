@@ -1,0 +1,214 @@
+﻿@model OpplusBSC.Models.Entities.TB_DATA_PROC_INT
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+
+<script type="text/javascript">
+
+    var vDia = '@ViewBag.DAY';
+    var vMes = '@ViewBag.MES';
+    var vAnio = '@ViewBag.YEAR';
+
+    var indi = '@ViewBag.indicador';
+
+    window.onload = load;
+
+    function load() {
+        console.log(indi);
+        //$('#selectMes').val(vMes);
+        //$('#selectAnio').val(vAno);
+
+        //checkIndicadoresFinancieros(vMes,vAno);
+    }
+
+    function FileDuplicado() {
+
+        var inputTxtFile = $("#txtArchivo"); //busco la cajita de texto que captura el nombre de archivo
+        var itemFormFile = inputTxtFile[0].files; //busco la propiedad files para luego acceder al nombre
+        var fileDup = itemFormFile[0].name; // accedo al nombre del archivo
+
+        //console.log(inputTxtFile);
+        //console.log(itemFormFile);
+        //console.log(fileDup);
+
+         var url = "/ProcesosInternos/ComprobarArchivoDuplicado";
+            var data = { "fileuploaded": fileDup };
+            var dataType = "json";
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: data,
+                success: function (response) {
+                    //console.log(response);
+                    if (response >= 1) {                       
+
+                        Swal.fire({
+                        title: '¿El archivo ' + fileDup +  ' ya se ha cargado, desea volver a cargarlo ?',
+                              showDenyButton: true,
+                              showCancelButton: true,
+                              confirmButtonText: `Si`,
+                              denyButtonText: `Don't save`,
+                            }).then((result) => {
+                              /* Read more about isConfirmed, isDenied below */
+                                if (result.isConfirmed) {
+
+                                    //Swal.fire('Ahora presione: Cargar Archivo', '', 'success')
+                                    uploadDataExcel();
+
+                              } else if (result.isDenied) {
+                                    Swal.fire('Changes are not saved', '', 'info')
+                                }
+                              })
+                    }
+                    else {
+                            
+                        //console.log("NO");
+                        
+                    }
+                },
+                dataType: dataType
+            });
+    };
+
+
+
+    function uploadDataExcel() {
+
+        console.log("hola");
+
+       var fileUpload = $("#txtArchivo").get(0);
+       var files = fileUpload.files;
+
+        var data = new FormData();
+
+        for (var i = 0; i < files.length; i++) {
+            data.append(files[i].name, files[i]); }   
+        
+
+        //console.log("-----------------");  
+
+        $.ajax({
+            type: "POST",
+            url: "/ProcesosInternos/cargarArchivoExcel?indicador=" + indi + "&vMes=" + vMes + "&vAnio=" + vAnio,                
+            data: data,
+            contentType: false,
+            processData: false,
+            success: function (jres) {
+
+                console.log(jres);
+
+                if (jres.errorMsg == "OK") {
+                    
+                    $('#txtArchivo').val("");                    
+
+                    Swal.fire(jres.errorMsg, jres.msg, 'success')
+
+                }
+                else if (jres.msg == "El tipo de dato o el formato de alguna(s) columna(s) no es válido, por favor revisar el Excel.") {
+
+                    $('#txtArchivo').val("");        
+
+                    Swal.fire(jres.errorMsg , 'Se cargaron algunos registros pero se detuvo ya que ' + jres.msg, 'warning')                    
+
+                } else if (jres.msg == "El archivo selecionado no es un documento Excel.Verifique que la extención del documento sea .XLS o .XLSX")
+                {
+
+                    $('#txtArchivo').val("");        
+
+                    Swal.fire('ERROR', jres.msg, 'warning')
+
+                }else if (jres.msg == "Error al insertar ")
+                {
+
+                    $('#txtArchivo').val("");        
+
+                    Swal.fire('ERROR', jres.msg, 'warning')
+                }
+                ///-------------
+            },
+        });
+        return false;
+
+    }
+
+
+
+</script>
+
+<br />
+
+<div class="row">
+
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+
+        <div class="form-element-list">
+            <div class="curved-inner-pro">
+                <div class="curved-ctn">
+                    <h2>Dashboard / Balanced Scorecard / Cargar información para @ViewBag.perspectiva</h2>
+                    <p>Su archivo unicamente con las extensiones  <strong>.XLS o .XLSX </strong> </p>
+                </div>
+            </div>
+
+            <div class="row">
+
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="sale-statistic-inner notika-shadow mg-tb-30">
+                        <div class="curved-inner-pro">
+                            <div class="curved-ctn">
+                                <h2>Formato Excel de KPIS</h2>
+                                <p>Por favor coloque los encabezados exactamente iguales, además no dejar campos en blanco ni los campos de numeros con letras y/o símbolos </p>
+                            </div>
+                        </div>
+
+                        <div class="blog-img">
+                            <img src="~/images/FormatoKPI.JPG">
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                    <div class="nk-int-mk sl-dp-mn">
+                        <h2>Usuario</h2>
+                    </div>
+                    <div class="form-group ic-cmp-int">
+                        <div class="contact-list">
+                            <div class="form-group">
+                                <input class="form-control" type="text" value="@ViewBag.user" id="txtUsuario" readonly />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                    <div class="nk-int-mk sl-dp-mn">
+                        <h2>Archivo</h2>
+                    </div>
+                    <div class="form-group ic-cmp-int">
+                        <div class="contact-list">
+                            <div class="form-group">
+                                <input type="file" id="txtArchivo" onchange="FileDuplicado();" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
+                    <div class="nk-int-mk sl-dp-mn">
+                        <h2 style="color:white">_</h2>
+                    </div>
+                    <div class="btn-list">
+
+                        <button class="btn btn-info notika-btn-info waves-effect" onclick="uploadDataExcel();">Cargar Archivo</button>
+                        
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<br />

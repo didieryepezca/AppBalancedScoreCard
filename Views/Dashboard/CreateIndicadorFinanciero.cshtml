@@ -1,0 +1,220 @@
+﻿@model OpplusBSC.Models.Entities.TB_DATA_FINANCIERA
+
+@{
+    ViewData["Title"] = "CreateIndicadorFinanciero";
+}
+
+<script type="text/javascript">
+
+    var result = '@ViewBag.exito';    
+
+    var indicador = '@ViewBag.perspectiva';
+
+    //console.log(result);
+
+    window.onload = load;
+
+        function load() {
+
+            if (result != "") {
+
+                AlertaActualizacion();
+
+            } else {
+                Atencion();
+            }
+        }
+
+        function AlertaActualizacion() {
+
+            if (result == "EXITO") {
+
+                Swal.fire('Registrado!', 'La informacion se guardo correctamente', 'success')
+
+            } else {
+
+                Swal.fire('ERROR', 'No se pudo agregar, contacta Administrador', 'warning')
+
+            }
+        }
+
+        function Atencion() {
+
+            Swal.fire('LEEME', 'A continuacion ingrese correctamente los datos solicitados', 'warning')
+
+    }
+
+
+    function isNumber(evt) {
+        var iKeyCode = (evt.which) ? evt.which : evt.keyCode
+        if (iKeyCode != 46 && iKeyCode > 31 && (iKeyCode < 48 || iKeyCode > 57))
+            return false;
+
+        return true;
+    }
+
+    function calcularResultado() {
+
+        var resultado = 0;
+
+        var costoReal = $('#cReal').val();
+        var costoPresupuesto = $('#cPresupuesto').val();
+        var ingresosReal = $('#cIngreso').val(); 
+
+        if (indicador == "Cumplimiento de Presupuesto") {
+
+            resultado = (ingresosReal - costoReal) / costoReal;
+
+            $('#resultado').val(resultado);           
+
+            //console.log(resultado);
+
+        } else {
+             resultado = (costoReal - costoPresupuesto) / costoPresupuesto;
+
+            $('#resultado').val(resultado);            
+        }
+    }
+</script>
+
+<br />
+
+<div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="breadcomb-list">
+            <div class="row">
+                <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
+                    <div class="breadcomb-wp">
+                        <div class="breadcomb-icon">
+                            <i class="notika-icon notika-form"></i>
+                        </div>
+                        <div class="breadcomb-ctn">
+                            <h2>Dashboard / Indicador Financiero / Agregar @ViewBag.perspectiva </h2>
+                            <p>Crear indicadores Financieros</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<hr />
+
+<div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+
+        <form asp-action="CreateIndicadorFinanciero">
+            <div class="form-example-wrap mg-t-30">
+                <div class="cmp-tb-hd cmp-int-hd">
+                    <h2>Informacion Financiera del @ViewBag.MES / @ViewBag.YEAR</h2>
+                </div>
+                <div class="row">
+                    <div class="col-lg-4 col-md-2 col-sm-2 col-xs-12">
+                        <div class="form-example-int form-example-st">
+                            <div class="form-group">
+                                <div class="nk-int-st">
+                                    <input asp-for="INDICADOR" type="text"
+                                           value="@ViewBag.perspectiva"
+                                           class="form-control input-sm" placeholder="Indicador" readonly>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="row">
+                    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
+                        <div class="form-example-int form-example-st">
+                            <div class="form-group">
+                                <div class="nk-int-st">
+                                    <input asp-for="COSTO_REAL" id="cReal"
+                                           onkeypress="javascript:return isNumber(event)"
+                                           onchange="calcularResultado()"
+                                           class="form-control input-sm" placeholder="Costo Real">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
+                        <div class="form-example-int form-example-st">
+                            <div class="form-group">
+                                <div class="nk-int-st">
+                                    <input asp-for="COSTO_PRESUPUESTO" id="cPresupuesto"
+                                           onkeypress="javascript:return isNumber(event)"
+                                           onchange="calcularResultado()"
+                                           class="form-control input-sm" placeholder="Costo Presupuesto">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
+                        <div class="form-example-int form-example-st">
+                            <div class="form-group">
+                                <div class="nk-int-st">
+                                    <input asp-for="INGRESOS_REAL" id="cIngreso"
+                                           onkeypress="javascript:return isNumber(event)"
+                                           onchange="calcularResultado()"
+                                           class="form-control input-sm" placeholder="Ingresos Real">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
+                        <div class="form-example-int form-example-st">
+                            <div class="form-group">
+                                <div class="nk-int-st">
+                                    <input asp-for="RESULTADO" id="resultado"
+                                           onkeypress="javascript:return isNumber(event)"
+                                           class="form-control input-sm" placeholder="Resultado"
+                                           readonly>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="row">
+
+                    <div class="col-lg-8 col-md-2 col-sm-2 col-xs-12">
+                        <div class="form-example-int form-example-st">
+                            <div class="form-group">
+                                <div class="nk-int-st">
+                                    <input asp-for="COMENTARIOS"                                           
+                                           class="form-control input-sm" placeholder="Comentarios">
+                                </div>
+                            </div>
+                        </div>
+                    </div>                  
+
+
+                    <div class="col-lg-4 col-md-4 col-sm-3 col-xs-12">
+                        <div class="form-example-int">
+                            @if (User.IsInRole("FINANZAS"))
+                            {
+                                <button class="btn btn-success notika-btn-success waves-effect">Guardar</button>
+                            }
+                                <a asp-action="Main" class="btn btn-default notika-btn-success waves-effect">Volver atras</a>
+                            </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </form>
+
+    </div>
+</div>
+
+<br />
+<br />
+<br />
+<br />

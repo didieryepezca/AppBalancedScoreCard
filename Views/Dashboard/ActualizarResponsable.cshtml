@@ -1,0 +1,280 @@
+﻿@model OpplusBSC.Models.Entities.TB_PERSPECTIVA_OWNER
+
+@{
+    ViewData["Title"] = "ActualizarResponsable";
+}
+
+
+<script type="text/javascript">
+
+    var result = '@ViewBag.exito';
+
+    console.log(result);
+
+    window.onload = load;
+
+    function load() {
+
+            if (result != "") {
+                AlertaActualizacion();
+            } else {
+                Atencion();
+                LoadPerspectivas();
+            }
+        }
+
+        function AlertaActualizacion() {
+
+            if (result == "EXITO") {
+                Swal.fire('Actualizado!', 'La informacion se guardo correctamente', 'success')
+            } else {
+                Swal.fire('ERROR', 'No se pudo cargar, revisa el archivo', 'warning')
+            }
+        }
+        function Atencion() {
+
+            Swal.fire('LEEME', 'A continuacion ingrese correctamente los datos solicitados', 'warning')
+
+    }
+
+
+    perspectivasActuales = [];
+
+    function LoadPerspectivas() {
+
+        var vIdOwner = $('#idResponsable').val();
+        var url = "/Dashboard/FunVerPerspectivasOwner";
+        $.get(url, { idOwner: vIdOwner }, function (data) {
+
+            data.forEach(function (element) {
+
+                $('#perspectivasList').append('<a id="pers'+element.id+'" class="btn btn-primary notika-btn-primary btn-xs waves-effect" onclick="RemovePerspectiva(`'+element.id+'`,`'+element.perspectiva+'`);">' + element.perspectiva + '<i class="notika-icon notika-close"></i></a>').fadeIn(300000);
+
+                perspectivasActuales.push(element.perspectiva);
+
+            });
+        });
+    }
+
+    function RemovePerspectiva(id,pers) {
+
+        perspectivasActuales = jQuery.grep(perspectivasActuales, function(value) {
+          return value != pers;
+        }); //Removemos el item eliminado del array principal
+
+        var url = "/Dashboard/FunDeletePerspectiva";
+        $.get(url, { id: id }, function (data) {
+
+            if (data > 0) {
+                $('#pers' + id).remove();
+            }
+        });
+    }
+
+    function CheckPerspectiva() {
+
+        var vIdOwner = $('#idResponsable').val();
+        var vNombre = $('#selectPerspectivas').val();
+
+        if (perspectivasActuales.includes(vNombre) === false) {//si no existe en el array lo añade
+            perspectivasActuales.push(vNombre);
+            AddPerspectiva(vIdOwner, vNombre);
+        } else {
+            Swal.fire('Atencion', 'El Responsable ya tiene esa Perspectiva', 'warning')
+        };
+        //console.log(perspectivasActuales);
+    }
+
+    function AddPerspectiva(vIdOwner, vNombre) {
+
+        //console.log(vIdOwner);
+        //console.log(vNombre);
+
+        var url = "/Dashboard/FunInsertPerspectiva";
+        $.get(url, { idOwner: vIdOwner, nombre: vNombre }, function (data) {
+            if (data > 0) {
+                //console.log(data);
+                $('#perspectivasList').append('<a id="pers'+data+'" class="btn btn-primary notika-btn-primary btn-xs waves-effect" onclick="RemovePerspectiva(`'+data+'`,`'+vNombre+'`);">' + vNombre + '<i class="notika-icon notika-close"></i></a>').fadeIn(300000);
+
+            }
+        });
+    }
+</script>
+
+
+<br />
+
+<div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="breadcomb-list">
+            <div class="row">
+                <div class="col-lg-8 col-md-6 col-sm-6 col-xs-12">
+                    <div class="breadcomb-wp">
+                        <div class="breadcomb-icon">
+                            <i class="notika-icon notika-form"></i>
+                        </div>
+                        <div class="breadcomb-ctn">
+                            <h2>Dashboard / Responsables / Actualizar Responsable</h2>
+                            <p>Por favor actualiza correctamente los datos del responsable</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<hr />
+
+
+<div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+
+        <form asp-action="ActualizarResponsable" enctype="multipart/form-data">
+
+            @{
+                var foto = ViewBag.foto;
+                var imgSrc = "";
+
+                if (foto != null)
+                {
+                    var base64 = Convert.ToBase64String(foto);
+                    imgSrc = String.Format("data:image/gif;base64,{0}", base64);
+                }
+                else
+                {
+
+                    imgSrc = "../img/post/2.jpg";
+                }
+
+            }
+            <div class="form-element-list">
+                <div class="basic-tb-hd">
+                    <h2>Datos del Responsable</h2>
+                </div>
+
+
+
+                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                    <div class="nk-int-mk sl-dp-mn">
+                        <h2>FOTO</h2>
+                    </div>
+                    <div class="form-group ic-cmp-int">
+                        <div class="contact-list">
+                            <div class="contact-win">
+                                <div class="contact-img">
+                                    <img src="@imgSrc"
+                                         onerror="this.onerror = null; this.src = '../img/post/2.jpg'"
+                                         data-toggle="tooltip" data-placement="top" title="" alt="user"
+                                         class="rounded-circle"
+                                         aria-describedby="tooltip636320"
+                                         style="height: 130px; width: 130px;">
+                                </div>
+
+                            </div>
+                            <div class="form-group">
+                                <input asp-for="FOTO" type="file" name="ImageData" id="ImageData" onchange="fileCheck(this);" />
+                            </div>
+
+                        </div>
+                    </div>
+
+
+
+                </div>
+
+
+                <div class="row">
+
+
+                    <div class="col-lg-6 col-md-8 col-sm-8 col-xs-12">
+
+                        <div class="row">
+                            <div class="col-lg-5 col-md-8 col-sm-8 col-xs-12">
+                                <div class="form-group ic-cmp-int">
+                                    <div class="nk-int-mk sl-dp-mn">
+                                        <h2>Agregar Perspectiva:</h2>
+                                    </div>
+
+                                    <div class="bootstrap-select fm-cmp-mg">
+                                        <div class="btn-group bootstrap-select">
+                                            <div class="dropdown-menu open" role="combobox" style="max-height: 357.6px; overflow: hidden; min-height: 132px;"><ul class="dropdown-menu inner" role="listbox" aria-expanded="false" style="max-height: 347.6px; overflow-y: auto; min-height: 122px;"><li data-original-index="0" class=""><a tabindex="0" class="" style="" data-tokens="null" role="option" aria-disabled="false" aria-selected="false"><span class="text">Drama</span><span class="notika-icon notika-checked check-mark"></span></a></li><li data-original-index="1" class=""><a tabindex="0" class="" style="" data-tokens="null" role="option" aria-disabled="false" aria-selected="false"><span class="text">Cariska</span><span class="notika-icon notika-checked check-mark"></span></a></li><li data-original-index="2" class="selected"><a tabindex="0" class="" style="" data-tokens="null" role="option" aria-disabled="false" aria-selected="true"><span class="text">Cheriska</span><span class="notika-icon notika-checked check-mark"></span></a></li><li data-original-index="3" class=""><a tabindex="0" class="" style="" data-tokens="null" role="option" aria-disabled="false" aria-selected="false"><span class="text">Malias</span><span class="notika-icon notika-checked check-mark"></span></a></li><li data-original-index="4"><a tabindex="0" class="" style="" data-tokens="null" role="option" aria-disabled="false" aria-selected="false"><span class="text">Kamines</span><span class="notika-icon notika-checked check-mark"></span></a></li><li data-original-index="5"><a tabindex="0" class="" style="" data-tokens="null" role="option" aria-disabled="false" aria-selected="false"><span class="text">Austranas</span><span class="notika-icon notika-checked check-mark"></span></a></li></ul></div>
+                                            <select id="selectPerspectivas" class="selectpicker" tabindex="-98">
+                                                <option value="" selected>Seleccione</option>
+                                                <option value="FINANCIERA">FINANCIERA</option>
+                                                <option value="CLIENTE">CLIENTE</option>
+                                                <option value="PROCESOS INTERNOS">PROCESOS INTERNOS</option>
+                                                <option value="APRENDIZAJE Y CRECIMIENTO">APRENDIZAJE Y CRECIMIENTO</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-1 col-md-8 col-sm-8 col-xs-12">
+                                <br />
+                                <a class="btn btn-default btn-icon-notika waves-effect" onclick="CheckPerspectiva();">+</a>
+                            </div>
+                        </div>
+
+                        <div id="perspectivasList" class="row">
+
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="col-lg-6 col-md-8 col-sm-8 col-xs-12">
+                        <input id="idResponsable" type="hidden" asp-for="ID" />
+                        <div class="form-group ic-cmp-int">
+                            <div class="form-ic-cmp">
+                                <i class="notika-icon notika-support"></i>
+                            </div>
+                            <div class="nk-int-st">
+                                <input asp-for="NOMBRES" type="text" class="form-control" placeholder="Nombres">
+                            </div>
+                        </div>
+                        <div class="form-group ic-cmp-int form-elet-mg">
+                            <div class="form-ic-cmp">
+                                <i class="notika-icon notika-support"></i>
+                            </div>
+                            <div class="nk-int-st">
+                                <input asp-for="APELLIDOS" type="text" class="form-control" placeholder="Apellidos">
+                            </div>
+
+                        </div>
+                        <div class="form-group ic-cmp-int">
+                            <div class="form-ic-cmp">
+                                <i class="notika-icon notika-next"></i>
+                            </div>
+                            <div class="nk-int-st">
+                                <input asp-for="REGISTRO" type="text" class="form-control" placeholder="Registro P">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-lg-12 col-md-4 col-sm-3 col-xs-12">
+                        <div class="form-example-int">
+                            <button class="btn btn-success notika-btn-success waves-effect">Actualizar</button>
+                            <a class="btn btn-secondary" asp-action="Responsables">Atras</a>
+                        </div>
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+        </form>
+    </div>
+</div>
+
+<br />
+<br />
+<br />
+<br />
